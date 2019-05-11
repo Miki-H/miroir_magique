@@ -4,12 +4,12 @@ import random
 from threading import Thread
 import serial
 import playsound
-
+import time
 class interface(Thread):
     def __init__(self):
         Thread.__init__(self)
     def run(self):
-        global w,images
+        global w,images, fenetre
         fenetre = Tk()
         fenetre.attributes("-fullscreen", 1)
         fenetre.configure(bg="black")  # background
@@ -28,7 +28,9 @@ class change(Thread):
         w.configure(image=images[num])
         w.pack(side="bottom", fill="both", expand="yes")
         sound = playsound.playsound("D:\M.wav", True)
-
+        time.sleep(2)
+        w.pack_forget()
+        fenetre.update()
 class Arduino(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -40,10 +42,10 @@ class Arduino(Thread):
             line = line.decode('utf-8').replace('\n', '')
             print(line)
             line = int(line)
-            if (line > 300):
+            if (line > 400):
                 thread_3 = change()
                 thread_3.start()
-                thread_3.join()
+
 # Création des threads
 thread_1 = interface()
 thread_2 = Arduino()
